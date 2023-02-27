@@ -911,47 +911,4 @@ function lib:init(ti, dosplash)
     return window
 end
 
-local a = lib:init("AppleUI", true)
-
-a:Divider("I am divider")
-local c = a:Section("Menu")
-a:Divider("Just dividin'")
-local b = a:Section("Test Notifications")
-
-b:Divider("Dividers are cool!")
-
-b:Button("Temporary Notification", function() 
-    a:TempNotify("Be careful!", "We are going to beat you up.") 
-end)
-
-b:Button("Notification 1", function() a:Notify("Hello!", "I am notification", "Button1", nil, function() 
-    print(11) 
-end) 
-end)
-
-b:Button("Notification 2", function() a:Notify2("Hello!", "I am notification", "Button 1", "Button 2", nil,
- function() 
-    print(1) 
-end,
-function() 
-    print(2) 
-end)
-end)
-
-c:Divider("I am another divider")
-
-c:Button("Click me!", function() 
-    print("Button clicked.")
-end)
-
-c:Label("Lorem ipsum dolor sit amet.")
-
-c:Switch("Switch me!", false, function(a) 
-    print(a) 
-end)
-
-c:TextField("Enter text here!", "Enter text here...", function(a)
-    print(a) 
-end)
-
-c:Select()
+return lib
