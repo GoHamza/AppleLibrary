@@ -4,11 +4,11 @@ local lib = {}
 local sections = {}
 local workareas = {}
 local notifs = {}
+local visible = true
+local dbcooper = false
 
-function lib:init(ti, dosplash)
-    -- testing only
-
-    if gethui():FindFirstChild("ScreenGui") then
+function lib:init(ti, dosplash, visiblekey, deleteprevious)
+    if gethui():FindFirstChild("ScreenGui") and deleteprevious then
         gethui().ScreenGui.main:TweenPosition(gethui().ScreenGui.main.Position + UDim2.new(0,0,2,0), "InOut", "Quart", 0.5)
         game:GetService("Debris"):AddItem(gethui().ScreenGui, 1)
     end
@@ -29,11 +29,9 @@ function lib:init(ti, dosplash)
         splash.Visible = true
         splash.ZIndex = 40
 
-
         local uc_22 = Instance.new("UICorner")
         uc_22.CornerRadius = UDim.new(0, 18)
         uc_22.Parent = splash
-
 
         local sicon = Instance.new("ImageLabel")
         sicon.Name = "sicon"
@@ -47,7 +45,6 @@ function lib:init(ti, dosplash)
         sicon.Image = "rbxassetid://12621719043"
         sicon.ScaleType = Enum.ScaleType.Fit
         sicon.TileSize = UDim2.new(1, 0, 20, 0)
-
 
         local ug = Instance.new("UIGradient")
         ug.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)), ColorSequenceKeypoint.new(0.01, Color3.fromRGB(61, 61, 61)), ColorSequenceKeypoint.new(0.47, Color3.fromRGB(41, 41, 41)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))}
@@ -86,45 +83,23 @@ function lib:init(ti, dosplash)
     uc.CornerRadius = UDim.new(0, 18)
     uc.Parent = main
 
-    -- yeah yeah i skidded this i know whatever
-    local UserInputService = game:GetService("UserInputService")
-    local runService = (game:GetService("RunService"));
-    
-    local gui = main
-    
+    local UserInputService = game:GetService("UserInputService") --- skidded ik
     local dragging
     local dragInput
     local dragStart
     local startPos
     
-    function Lerp(a, b, m)
-        return a + (b - a) * m
-    end;
+    local function update(input)
+        local delta = input.Position - dragStart
+        main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
     
-    local lastMousePos
-    local lastGoalPos
-    local DRAG_SPEED = (20);
-    function Update(dt)
-        if not (startPos) then return end;
-        if not (dragging) and (lastGoalPos) then
-            gui.Position = UDim2.new(startPos.X.Scale, Lerp(gui.Position.X.Offset, lastGoalPos.X.Offset, dt * DRAG_SPEED), startPos.Y.Scale, Lerp(gui.Position.Y.Offset, lastGoalPos.Y.Offset, dt * DRAG_SPEED))
-            return 
-        end;
-    
-        local delta = (lastMousePos - UserInputService:GetMouseLocation())
-        local xGoal = (startPos.X.Offset - delta.X);
-        local yGoal = (startPos.Y.Offset - delta.Y);
-        lastGoalPos = UDim2.new(startPos.X.Scale, xGoal, startPos.Y.Scale, yGoal)
-        gui.Position = UDim2.new(startPos.X.Scale, Lerp(gui.Position.X.Offset, xGoal, dt * DRAG_SPEED), startPos.Y.Scale, Lerp(gui.Position.Y.Offset, yGoal, dt * DRAG_SPEED))
-    end;
-    
-    gui.InputBegan:Connect(function(input)
+    main.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
             dragging = true
             dragStart = input.Position
-            startPos = gui.Position
-            lastMousePos = UserInputService:GetMouseLocation()
-    
+            startPos = main.Position
+            
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
                     dragging = false
@@ -133,13 +108,17 @@ function lib:init(ti, dosplash)
         end
     end)
     
-    gui.InputChanged:Connect(function(input)
+    main.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
             dragInput = input
         end
     end)
     
-    runService.Heartbeat:Connect(Update)
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
 
     -- workarea right side setup
 
@@ -218,6 +197,7 @@ function lib:init(ti, dosplash)
     sidebar.BorderSizePixel = 0
     sidebar.Position = UDim2.new(0.0249653254, 0, 0.181506842, 0)
     sidebar.Size = UDim2.new(0, 233, 0, 463)
+    sidebar.AutomaticCanvasSize = "Y"
     sidebar.CanvasSize = UDim2.new(0, 0, 0, 0)
     sidebar.ScrollBarThickness = 2
 
@@ -225,6 +205,25 @@ function lib:init(ti, dosplash)
     ull_2.Parent = sidebar
     ull_2.SortOrder = Enum.SortOrder.LayoutOrder
     ull_2.Padding = UDim.new(0, 5)
+
+    game:GetService("RunService"):BindToRenderStep("search", 1, function() -- i sure do love skidding
+        if not searchtextbox:IsFocused() then 
+            for b,v in next, sidebar:GetChildren() do
+                if not v:IsA("TextButton") then return end
+                v.Visible = true
+            end
+        end
+        local InputText=string.upper(searchtextbox.Text)
+        for _,button in pairs(sidebar:GetChildren())do
+            if button:IsA("TextButton")then
+                if InputText==""or string.find(string.upper(button.Text),InputText)~=nil then
+                    button.Visible=true
+                else
+                    button.Visible=false
+                end
+            end
+        end
+    end)
     -- macos style buttons
 
 
@@ -254,6 +253,9 @@ function lib:init(ti, dosplash)
     close.Text = ""
     close.TextColor3 = Color3.fromRGB(255, 50, 50)
     close.TextSize = 14
+    close.MouseButton1Click:Connect(function()
+        scrgui:Destroy()
+    end)
 
 
     local uc_18 = Instance.new("UICorner")
@@ -532,6 +534,39 @@ function lib:init(ti, dosplash)
         
     window = {}
 
+    function window:ToggleVisible()
+        if dbcooper then return end
+        visible = not visible
+        dbcooper = true
+        if visible then
+            main:TweenPosition(UDim2.new(0.5,0,0.5,0), "InOut", "Quart", 0.5, false)
+            task.wait(0.5)
+            dbcooper = false
+        else
+            main:TweenPosition(main.Position + UDim2.new(0,0,2,0), "InOut", "Quart", 0.5, false)
+            task.wait(0.5)
+            dbcooper = false
+        end
+    end
+
+    if visiblekey then
+        minimize.MouseButton1Click:Connect(function()
+            window:ToggleVisible()
+        end)
+        game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+            if input.KeyCode == visiblekey then
+                window:ToggleVisible()
+            end
+        end)
+    end
+
+    function window:GreenButton(callback)
+        if _G.gbutton_123123 then _G.gbutton_123123:Disconnect() end
+        _G.gbutton_123123 = resize.MouseButton1Click:Connect(function()
+            callback()
+        end)
+    end
+
     function window:TempNotify(text1, text2, icon)
         for b,v in next, scrgui:GetChildren() do
             if v.Name == "tempnotif" then 
@@ -766,7 +801,14 @@ function lib:init(ti, dosplash)
 
 
             if callback then
-                button.MouseButton1Click:Connect(callback)
+                button.MouseButton1Click:Connect(function() 
+                    coroutine.wrap(function()
+                        button.TextSize -= 3
+                        task.wait(0.06)
+                        button.TextSize += 3
+                    end)()
+                    callback()
+                end)
             end
         end
 
@@ -801,11 +843,12 @@ function lib:init(ti, dosplash)
             toggleswitch.TextWrapped = true
             toggleswitch.TextXAlignment = Enum.TextXAlignment.Left
 
-            local Frame = Instance.new("Frame")
+            local Frame = Instance.new("TextButton")
             Frame.Parent = toggleswitch
-            
             Frame.Position = UDim2.new(0.832535863, 0, 0.0270270277, 0)
             Frame.Size = UDim2.new(0, 70, 0, 36)
+            Frame.Text=""
+            Frame.AutoButtonColor = false
 
             local uc_4 = Instance.new("UICorner")
             uc_4.CornerRadius = UDim.new(5, 0)
@@ -816,10 +859,7 @@ function lib:init(ti, dosplash)
             TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             TextButton.Size = UDim2.new(0, 34, 0, 34)
             TextButton.AutoButtonColor = false
-            TextButton.Font = Enum.Font.SourceSans
             TextButton.Text = ""
-            TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-            TextButton.TextSize = 14
 
             local uc_5 = Instance.new("UICorner")
             uc_5.CornerRadius = UDim.new(5, 0)
@@ -833,6 +873,21 @@ function lib:init(ti, dosplash)
                 Frame.BackgroundColor3 = Color3.fromRGB(21, 103, 251)
             end
 
+            Frame.MouseButton1Click:Connect(function()
+                mode = not mode
+
+                if callback then
+                    callback(mode)
+                end
+
+                if mode then
+                    TextButton:TweenPosition(UDim2.new(0, 35, 0, 1), "In", "Sine", 0.1, true)
+                    Frame.BackgroundColor3 = Color3.fromRGB(21, 103, 251)
+                else
+                    TextButton:TweenPosition(UDim2.new(0,1,0,1), "In", "Sine", 0.1, true)
+                    Frame.BackgroundColor3 = Color3.fromRGB(216, 216, 216)
+                end
+            end)
             TextButton.MouseButton1Click:Connect(function()
                 mode = not mode
 
