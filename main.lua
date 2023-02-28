@@ -1,11 +1,11 @@
 -- vars
 
-lib = {}
-sections = {}
-workareas = {}
-notifs = {}
-visible = true
-dbcooper = false
+local lib = {}
+local sections = {}
+local workareas = {}
+local notifs = {}
+local visible = true
+local dbcooper = false
 
 function lib:init(ti, dosplash, visiblekey, deleteprevious)
     if gethui():FindFirstChild("ScreenGui") and deleteprevious then
