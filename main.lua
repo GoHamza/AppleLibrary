@@ -8,14 +8,30 @@ local visible = true
 local dbcooper = false
 
 function lib:init(ti, dosplash, visiblekey, deleteprevious)
-    if gethui():FindFirstChild("ScreenGui") and deleteprevious then
-        gethui().ScreenGui.main:TweenPosition(gethui().ScreenGui.main.Position + UDim2.new(0,0,2,0), "InOut", "Quart", 0.5)
-        game:GetService("Debris"):AddItem(gethui().ScreenGui, 1)
-    end
+    if identifyexecutor() == "Synapse" and syn then
+        if game:GetService("CoreGui"):FindFirstChild("ScreenGui") and deleteprevious then
+           game:GetService("CoreGui").ScreenGui.main:TweenPosition(gethui().ScreenGui.main.Position + UDim2.new(0,0,2,0), "InOut", "Quart", 0.5)
+            game:GetService("Debris"):AddItem(game:GetService("CoreGui").ScreenGui, 1)
+      end
 
-    -- main
-    local scrgui = Instance.new("ScreenGui")
-    scrgui.Parent = gethui()
+         -- main
+       local scrgui = Instance.new("ScreenGui")
+        syn.protect_gui(scrgui)
+        scrgui.Parent = game:GetService("CoreGui")
+    elseif gethui then
+        if gethui():FindFirstChild("ScreenGui") and deleteprevious then
+            gethui().ScreenGui.main:TweenPosition(gethui().ScreenGui.main.Position + UDim2.new(0,0,2,0), "InOut", "Quart", 0.5)
+            game:GetService("Debris"):AddItem(gethui().ScreenGui, 1)
+        end
+
+        -- main
+        local scrgui = Instance.new("ScreenGui")
+        scrgui.Parent = gethui()
+    end
+        
+    
+    
+    
 
     if dosplash then
         local splash = Instance.new("Frame")
