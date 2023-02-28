@@ -66,4 +66,25 @@ section:Switch(text: string, callback: function)
 ```lua
 section:TextField(text: string, placeholderText: string, callback: function)
 ```
+## Miscellanous
+- Toggle Visibility: Hides/Shows window.
+```lua
+window:ToggleVisible
+```
+- Green Button: Sets the callback of the green traffic light button.
+```lua
+window:GreenButton(callback: function)
+```
+# Apple Library: Images
+
+![image](https://user-images.githubusercontent.com/82454201/221863896-c92c454a-00a4-4943-9714-532e12d50ee5.png)
+### Window
+![image](https://user-images.githubusercontent.com/82454201/221863995-7f86524a-c4ea-4123-8978-d57a99421b7c.png)
+### Splash
+![image](https://user-images.githubusercontent.com/82454201/221864179-56a4b5d6-df49-4f52-b1bb-ad3465a0e4f2.png)
+### Temporary Notification
+![image](https://user-images.githubusercontent.com/82454201/221864518-4215a85c-e1cb-4a05-a1c0-730a61a73e57.png)
+### Notification 1
+![image](https://user-images.githubusercontent.com/82454201/221864617-41d6443e-6623-487b-87c0-7502ff1a4ab4.png)
+### Notification 2
 # Any inquiries? Contact me on Discord: windows cheese chips flavored#3516
