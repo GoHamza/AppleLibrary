@@ -15,7 +15,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
       end
 
          -- main
-       local scrgui = Instance.new("ScreenGui")
+        scrgui = Instance.new("ScreenGui")
         syn.protect_gui(scrgui)
         scrgui.Parent = game:GetService("CoreGui")
     elseif gethui then
@@ -25,7 +25,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         end
 
         -- main
-        local scrgui = Instance.new("ScreenGui")
+         scrgui = Instance.new("ScreenGui")
         scrgui.Parent = gethui()
     end
         
