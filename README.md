@@ -2,7 +2,7 @@
 UI Library in the style of Apple's MacOS and iPadOS
 
 ## Software requirements
-Requires a Roblox utility with `gethui()` function. Tested on KRNL and Script-Ware.
+Requires a Roblox utility with `gethui()` or `syn.protect_gui` function. Tested on KRNL and Script-Ware.
 
 
 ## How to use?
