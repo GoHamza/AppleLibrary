@@ -628,7 +628,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         ticon.Position = UDim2.new(0.0311112702, 0, 0.193464488, 0)
         ticon.Size = UDim2.new(0, 71, 0, 71)
         ticon.ZIndex = 4
-        ticon.Image = icon or "rbxassetid://12608259004"
+        ticon.Image = icon
         ticon.ImageColor3 = Color3.fromRGB(95, 95, 95)
         ticon.ScaleType = Enum.ScaleType.Fit
 
@@ -652,7 +652,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         if notif.Visible == true or notif2.Visible == true then return "Already visible" end
         notiftitle.Text = txt1
         notiftext.Text = txt2
-        notificon = icohn or "rbxassetid://4871684504"
+        notificon = icohn
         notif.Visible = true
         notifbutton1.Text = b1
         if callback then
@@ -668,7 +668,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         if notif.Visible == true or notif2.Visible == true then return "Already visible" end
         notif2title.Text = txt1
         notif2text.Text = txt2
-        notif2icon = icohn or "rbxassetid://4871684504"
+        notif2icon = icohn
         notif2.Visible = true
         notif2button1.Text = b1
         notif2button2.Text = b2
