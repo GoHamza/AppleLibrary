@@ -8,7 +8,7 @@ local visible = true
 local dbcooper = false
 
 function lib:init(ti, dosplash, visiblekey, deleteprevious)
-    if identifyexecutor() == "Synapse" and syn then
+    if syn then
         if game:GetService("CoreGui"):FindFirstChild("ScreenGui") and deleteprevious then
            game:GetService("CoreGui").ScreenGui.main:TweenPosition(gethui().ScreenGui.main.Position + UDim2.new(0,0,2,0), "InOut", "Quart", 0.5)
             game:GetService("Debris"):AddItem(game:GetService("CoreGui").ScreenGui, 1)
@@ -27,6 +27,14 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         -- main
          scrgui = Instance.new("ScreenGui")
         scrgui.Parent = gethui()
+    else
+        cg = game:GetService("CoreGui")
+        if cg:FindFirstChild("ScreenGui") and deleteprevious then
+            cg.ScreenGui.main:TweenPosition(cg.ScreenGui.main.Position + UDim2.new(0,0,2,0), "InOut", "Quart", 0.5)
+            game:GetService("Debris"):AddItem(cg.ScreenGui, 1)
+        end
+         scrgui = Instance.new("ScreenGui")
+        scrgui.Parent = cg
     end
         
     
