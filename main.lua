@@ -7,11 +7,17 @@ local notifs = {}
 local visible = true
 local dbcooper = false
 
+local function tp(ins, pos, time, thing)
+    game:GetService("TweenService"):Create(ins, TweenInfo.new(time, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut),{Position = pos}):Play()
+end
+
 function lib:init(ti, dosplash, visiblekey, deleteprevious)
     if syn then
-        if game:GetService("CoreGui"):FindFirstChild("ScreenGui") and deleteprevious then
-           game:GetService("CoreGui").ScreenGui.main:TweenPosition(gethui().ScreenGui.main.Position + UDim2.new(0,0,2,0), "InOut", "Quart", 0.5)
-            game:GetService("Debris"):AddItem(game:GetService("CoreGui").ScreenGui, 1)
+        
+         cg = game:GetService("CoreGui")
+        if cg:FindFirstChild("ScreenGui") and deleteprevious then
+           tp(cg.ScreenGui.main, cg.ScreenGui.main.Position + UDim2.new(0,0,2,0), 0.5)
+            game:GetService("Debris"):AddItem(cg.ScreenGui, 1)
       end
 
          -- main
@@ -30,7 +36,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     else
         cg = game:GetService("CoreGui")
         if cg:FindFirstChild("ScreenGui") and deleteprevious then
-            cg.ScreenGui.main:TweenPosition(cg.ScreenGui.main.Position + UDim2.new(0,0,2,0), "InOut", "Quart", 0.5)
+            tp(cg.ScreenGui.main, cg.ScreenGui.main.Position + UDim2.new(0,0,2,0), 0.5)
             game:GetService("Debris"):AddItem(cg.ScreenGui, 1)
         end
          scrgui = Instance.new("ScreenGui")
@@ -553,9 +559,7 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
     else
         title.Text = ""
     end
-
-    main:TweenPosition(UDim2.new(0.5, 0, 0.5, 0), "InOut", "Quart", 1)
-        
+       tp(main, UDim2.new(0.5, 0, 0.5, 0), 1)
     window = {}
 
     function window:ToggleVisible()
@@ -563,11 +567,11 @@ function lib:init(ti, dosplash, visiblekey, deleteprevious)
         visible = not visible
         dbcooper = true
         if visible then
-            main:TweenPosition(UDim2.new(0.5,0,0.5,0), "InOut", "Quart", 0.5, false)
+            tp(main, UDim2.new(0.5, 0, 0.5, 0), 0.5)
             task.wait(0.5)
             dbcooper = false
         else
-            main:TweenPosition(main.Position + UDim2.new(0,0,2,0), "InOut", "Quart", 0.5, false)
+            tp(main, main.Position + UDim2.new(0,0,2,0), 0.5)
             task.wait(0.5)
             dbcooper = false
         end
